@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Deep Whaling</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="https://use.fontawesome.com/3cfd69bfa7.js"></script>
+	<link rel="stylesheet" href="styles/social.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script>
+		var counter = 1;
+
+		function addLayer(divName) {
+			var newdiv = document.createElement('div');
+			newdiv.innerHTML = "<label for=\"layer" + (counter + 1) + "\">Layer " + (counter + 1) + ":</label> <input type=\"text\" class=\"form-control\" id=\"layer" + (counter + 1) + "\"><p>neurons</p>";
+			document.getElementById(divName).appendChild(newdiv);
+			counter++;
+			// <label for="layer1">Layer 1:</label>
+			// <input type="text" class="form-control" id="layer1">
+			// <p>neurons</p>
+		}
+	</script>
+	<style>
+		/* Remove the navbar's default margin-bottom and rounded borders */
+
+		.navbar {
+			margin-bottom: 0;
+			border-radius: 0;
+		}
+		/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+
+		.row.content {
+			height: 450px
+		}
+		/* Set gray background color and 100% height */
+
+		.sidenav {
+			padding-top: 20px;
+			background-color: #f1f1f1;
+			height: 100%;
+		}
+
+		.main-body {
+			overflow: auto;
+			padding-bottom: 100px;
+			height: 100%;
+		}
+
+		footer {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			background-color: #555;
+			color: white;
+			padding: 15px;
+			margin-top: -95px;
+			/* negative value of footer height */
+			height: 95px;
+		}
+		/* On small screens, set height to 'auto' for sidenav and grid */
+
+		@media screen and (max-width: 767px) {
+			.sidenav {
+				height: auto;
+				padding: 15px;
+			}
+			.row.content {
+				height: auto;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Logo</a>
+			</div>
+			<div class="collapse navbar-collapse" id="myNavbar">
+				<ul class="nav navbar-nav">
+					<li><a href="index.html">Home</a></li>
+					<li class="active"><a href="#">Progress/Results</a></li>
+				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="https://www.holbertonschool.com"><span class="#"></span> Holberton School</a></li>
+					<li><a href="https://www.docker.com"><span class="#"></span> Docker</a></li>
+					<li><a href="#"><span class="#"></span> Project on Github</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container-fluid text-left main-body">
+		<br>
+		<h1>Current Progress</h1>
+		<div class="row">
+			<div class="col-sm-12">
+				<h3>Iterations</h3>
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
+						40%
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-3">
+				<h3>Accuracy</h3>
+				<p></p>
+			</div>
+			<div class="col-sm-3">
+				<h3>Loss</h3>
+			</div>
+			<div class="col-sm-3">
+				<h3>Validation</h3>
+			</div>
+			<div class="col-sm-3">
+				<h3>Validation Loss</h3>
+			</div>
+		</div>
+	</div>
+
+	<footer class="footer">
+		<div class="container-fluid text-left">
+			<div class="row">
+				<div class="col-sm-3 pull-left">
+					<a class="btn btn-block btn-social btn-github" href="https://github.com/johnSerrano">
+						<span class="fa fa-github"></span>John Serrano
+					</a>
+				</div>
+				<div class="col-sm-3 pull-right">
+					<a class="btn btn-block btn-social btn-github" href="https://github.com/butcallmejo">
+						<span class="fa fa-github"></span>Josquin Gaillard
+					</a>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-3 pull-left">
+					<a class="btn btn-block btn-social btn-twitter" href="https://twitter.com/johnSerrano2">
+						<span class="fa fa-twitter"></span>John Serrano
+					</a>
+				</div>
+				<div class="col-sm-3 pull-right">
+					<a class="btn btn-block btn-social btn-twitter" href="https://twitter.com/butcallmejo">
+						<span class="fa fa-twitter"></span>Josquin Gaillard
+					</a>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+</body>
+
+</html>
