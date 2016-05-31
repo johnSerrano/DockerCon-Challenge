@@ -18,6 +18,40 @@
 			newdiv.innerHTML = "<label for=\"layer" + (counter + 1) + "\">Layer " + (counter + 1) + ":</label> <input type=\"text\" value=\"10\" class=\"form-control\" id=\"layer" + (counter + 1) + "\"><p>neurons</p>";
 			document.getElementById(divName).appendChild(newdiv);
 			counter++;
+			console.log(counter);
+		}
+
+		function form_to_json() {
+			var form;
+			// form.onsubmit =
+			form.onsubmit = function(e) {
+				// stop the regular form submission
+				e.preventDefault();
+				console.log();
+				// collect the form data while iterating over the inputs
+				var data = {};
+				for (var i = 0, ii = form.length; i < ii; ++i) {
+					var input = form[i];
+					var sizes = {}
+					if (input.name == /layer*/) {
+						data['layers'].append({'size':input.value});
+					} else if (input.name) {
+						data[input.name] = input.value;
+					}
+				}
+				console.log(data);
+				// construct an HTTP request
+				var xhr = new XMLHttpRequest();
+				xhr.open(form.method, form.action, true);
+				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+				// send the collected data as JSON
+				xhr.send(JSON.stringify(data));
+
+				xhr.onloadend = function() {
+					// done
+				};
+			}
 		}
 	</script>
 	<style>
@@ -123,8 +157,8 @@
 				</div>
 				<div class="col-sm-6 text-left">
 					<div id="datasets" class="form-group">
-						<label for="sel_dataset">Select dataset:</label>
-						<select class="form-control" id="sel_dataset">
+						<label for="dataset">Select dataset:</label>
+						<select class="form-control" id="dataset">
 							<option>mnist</option>
 							<option>-</option>
 							<option>-</option>
@@ -138,7 +172,8 @@
 					</div>
 				</div>
 				<div class="col-sm-12 text-center">
-					<button type="submit" class="btn btn-success">Run Network</button>
+					<!-- onclick="form_to_json()" -->
+					<button type="button" class="btn btn-success" >Run Network</button>
 				</div>
 			</form>
 		</div>
