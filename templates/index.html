@@ -22,36 +22,30 @@
 		}
 
 		function form_to_json() {
-			var form = getElementById('id');
-			console.log("hi");
-			// form.onsubmit =
-			form.onsubmit = function(e) {
-				// stop the regular form submission
-				e.preventDefault();
-				// collect the form data while iterating over the inputs
-				var data = {};
-				for (var i = 0, ii = form.length; i < ii; ++i) {
-					var input = form[i];
-					var sizes = {}
-					if (input.name == /layer*/) {
-						data['layers'].append({'size':input.value});
-					} else if (input.name) {
-						data[input.name] = input.value;
-					}
-				}
-				console.log(data);
-				// construct an HTTP request
-				var xhr = new XMLHttpRequest();
-				xhr.open(form.method, form.action, true);
-				xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-
-				// send the collected data as JSON
-				xhr.send(JSON.stringify(data));
-
-				xhr.onloadend = function() {
-					// done
-				};
+			var data = {"layers": [], "iterations": 0, "dataset": "----"}
+			var count = 1;
+			var layer = document.getElementById("layer" + count);
+			while (layer != null) {
+				data["layers"].push({"size": parseInt(layer.value)});
+				count += 1;
+				layer = document.getElementById("layer" + count);
 			}
+			data["iterations"] = parseInt(document.getElementById("iters").value);
+			data["dataset"] = parseInt(document.getElementById("dataset").value);
+
+			console.log(data);
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/runnetwork", true);
+			xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+			// send the collected data as JSON
+			xhr.send(JSON.stringify(data));
+
+			xhr.onloadend = function () {
+			  // done
+			};
+			window.location.href = "/results";
 		}
 	</script>
 	<style>
@@ -173,7 +167,7 @@
 				</div>
 				<div class="col-sm-12 text-center">
 					<!-- onclick="form_to_json()" -->
-					<button type="button" class="btn btn-success" >Run Network</button>
+					<button type="button" class="btn btn-success" onclick="form_to_json()">Run Network</button>
 				</div>
 			</form>
 		</div>
