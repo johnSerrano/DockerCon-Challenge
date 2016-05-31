@@ -29,7 +29,7 @@ def runnetwork():
 
 @app.route('/results')
 def results():
-	return render_template("runnetwork.html")
+	return render_template("results.html")
 
 @app.route('/test_post.html')
 def test_post():
