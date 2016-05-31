@@ -11,22 +11,11 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script>
-		var counter = 1;
-
-		function addLayer(divName) {
-			var newdiv = document.createElement('div');
-			newdiv.innerHTML = "<label for=\"layer" + (counter + 1) + "\">Layer " + (counter + 1) + ":</label> <input type=\"text\" class=\"form-control\" id=\"layer" + (counter + 1) + "\"><p>neurons</p>";
-			document.getElementById(divName).appendChild(newdiv);
-			counter++;
-			// <label for="layer1">Layer 1:</label>
-			// <input type="text" class="form-control" id="layer1">
-			// <p>neurons</p>
-		}
-
 		(document).ready(function() {
 			var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
 			socket.on('my response', function(msg) {
-				$('#log').append('<p>Received: ' + msg.data + '</p>');
+				// $('#log').append('<p>Received: ' + msg.data + '</p>');
+				console.log(msg);
 			});
 		});
 	</script>
