@@ -31,7 +31,7 @@
 				layer = document.getElementById("layer" + count);
 			}
 			data["iterations"] = parseInt(document.getElementById("iters").value);
-			data["dataset"] = parseInt(document.getElementById("dataset").value);
+			data["dataset"] = document.getElementById("dataset").value;
 
 			console.log(data);
 
@@ -119,17 +119,25 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="https://www.holbertonschool.com"><span class="#"></span> Holberton School</a></li>
 					<li><a href="https://www.docker.com"><span class="#"></span> Docker</a></li>
-					<li><a href="#"><span class="#"></span> Project on Github</a></li>
+					<li><a href="https://github.com/butcallmeJo/DockerCon-Challenge"><span class="#"></span> Project on Github</a></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 
-	<div class="container-fluid text-center main-body">
+	<div class="container-fluid main-body">
 		<div class="row">
-			<div class="col-sm-12 text-center">
-				<h1>NAME and HOW-TO</h1>
-				<p>This is what the project is and this is how you run it. select this and that and press go at the end</p>
+			<div class="col-sm-12 text-left">
+				<h1>Deep Whaling</h1>
+				<h4>About:</h4>
+				<p><strong>Deep Whaling</strong> is an open source GUI to run <a href="http://keras.io/">Keras</a>,
+					a highly modular neural networks library while running in a <a href="https://www.docker.com">Docker</a>
+					container. This makes <strong>Deep Whaling</strong> a very easy tool to learn about deep learning!</p>
+				<h4>How to use <strong>Deep Whaling</strong>:</h4>
+				<p>To run <strong>Deep Whaling</strong>, you just have to follow 4 easy steps:</p>
+				<ul>
+					<li>select the amount of layers you want.</li>
+					<li>Input how many neurons you want for each layer</li>
 			</div>
 		</div>
 		<div class="row">
