@@ -10,9 +10,15 @@
 	<link rel="stylesheet" href="social.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
 	<script>
 		$(document).ready(function() {
+			var data1 = []
+			var data2 = []
+			chart(data1, data2)
+
 			var socket = io.connect('http://' + document.domain + ':' + location.port);
 			socket.on('connect', function(){
 				socket.emit('join', {room: 'results_room'});
@@ -30,12 +36,54 @@
 				$("#val_acc").html(msg["val_acc"])
 				$("#val_loss").html(msg["val_loss"])
 
+				data1.push(msg["acc"])
+				data2.push(msg["val_acc"])
+
 				if (msg["done"] == true) {
 					$('#progress_bar_epochs').toggleClass("progress-bar-striped active progress-bar-success")
                 			socket.emit('disconnect request');
+				} else {
+					chart(data1, data2)
 				}
 			});
 		});
+
+		function chart(data1, data2) {
+			$(function () {
+			    $('#container').highcharts({
+			        title: {
+			            text: 'Accuracy',
+			            x: -20 //center
+			        },
+			        xAxis: {
+			            categories: []
+			        },
+			        yAxis: {
+			            title: {
+			                text: 'Percent Correct'
+			            },
+			            plotLines: [{
+			                value: 0,
+			                width: 1,
+			                color: '#808080'
+			            }]
+			        },
+			        legend: {
+			            layout: 'vertical',
+			            align: 'right',
+			            verticalAlign: 'middle',
+			            borderWidth: 0
+			        },
+			        series: [{
+			            name: 'Training Accuracy',
+			            data: data1
+			        }, {
+			            name: 'Test Accuracy',
+			            data: data2
+			    	}]
+			    });
+			});
+		}
 	</script>
 	<style>
 		/* Remove the navbar's default margin-bottom and rounded borders */
@@ -145,6 +193,7 @@
 				<p id="val_loss">0.00</p>
 			</div>
 		</div>
+		<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 	</div>
 
 	<footer class="footer">
