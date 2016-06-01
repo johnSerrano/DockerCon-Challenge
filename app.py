@@ -20,6 +20,9 @@ def index():
 @app.route('/runnetwork', methods=["POST"])
 def runnetwork():
 	content = request.get_json()
+	print content["layers"]
+	print content["dataset"]
+	print content["iterations"]
 	if not content:
 		return "No JSON posted"
 	print "*****RUNNING NEW THREAD*****"

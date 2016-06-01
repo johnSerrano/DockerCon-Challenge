@@ -1,0 +1,7 @@
+numpy
+scipy
+theano
+keras
+six
+flask
+flask_socketio
