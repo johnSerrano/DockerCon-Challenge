@@ -42,11 +42,6 @@ def loaded_network_callback(loaded, room):
 	socketio.emit('loaded', loaded, room=room)
 
 
-# @socketio.on('connect')
-# def test_connect():
-#     pass
-
-
 @socketio.on('join')
 def join(message):
     join_room(message['room'])
