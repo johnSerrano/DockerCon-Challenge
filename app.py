@@ -37,11 +37,6 @@ def results():
 	return render_template("results.html")
 
 
-@app.route('/test_post.html')
-def test_post():
-	return render_template("test_post.html")
-
-
 #use websockets to post the progress and results of the network
 def progress_socket_callback(progress, room):
 	socketio.emit('progress', progress, room=room)
