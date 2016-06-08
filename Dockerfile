@@ -6,4 +6,6 @@ COPY network.py /usr/src/app/network.py
 COPY templates/results.html /usr/src/app/templates/
 COPY templates/social.css /usr/src/app/templates/
 COPY templates/index.html /usr/src/app/templates/
+COPY keras_load_datasets.py /opt/keras_load_datasets.py
+RUN python /opt/keras_load_datasets.py
 CMD ["python", "/usr/src/app/app.py"]
