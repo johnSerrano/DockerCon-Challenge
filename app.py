@@ -26,7 +26,7 @@ def runnetwork():
 	print content["dataset"]
 	print content["iterations"]
 	print content["room"]
-	t = Thread(target=process_network, args=(content, progress_socket_callback))
+	t = Thread(target=process_network, args=(content, progress_socket_callback, loaded_network_callback))
 	t.start()
 	return "JSON posted successfully"
 	return process_network(content, progress_socket_callback)
@@ -49,6 +49,10 @@ def progress_socket_callback(progress, room):
 		print "Done!",
 	print str(progress["current_epoch"]) + '/' + str(progress["total_epochs"])
 	print str(progress["val_acc"])
+
+
+def loaded_network_callback(loaded, room):
+	socketio.emit('loaded', loaded, room=room)
 
 
 @socketio.on('connect')

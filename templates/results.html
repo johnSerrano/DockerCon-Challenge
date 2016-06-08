@@ -27,12 +27,18 @@
 			});
 			socket.on('room joined', function() {
 				console.log('joined room');
-			})
-			socket.on('join ack', function() {
-				if ($('#status').html() == "Connecting...") {
+			});
+			socket.on('loaded', function(msg) {
+				if ($('#status').html() == "Loading...") {
 					$('#status').html("Loading Network...");
 				}
-			})
+				$('#dataset').html("Dataset: " + msg['dataset']);
+			});
+			socket.on('join ack', function() {
+				if ($('#status').html() == "Connecting...") {
+					$('#status').html("Loading...");
+				}
+			});
 			socket.on('progress', function(msg) {
 				// $('#log').append('<p>Received: ' + msg.data + '</p>');
 				var finished_percentage = (parseInt(msg["current_epoch"]) / parseInt(msg["total_epochs"])) * 100
@@ -190,7 +196,7 @@
 			</div>
 			<div class="col-xs-12 col-sm-6 com-md-6 col-lg-6">
 				<!-- network info -->
-				<h1>Dataset: MNIST</h1>
+				<h1 id="dataset"></h1>
 			</div>
 		</div>
 		<div class="row">

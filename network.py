@@ -5,7 +5,7 @@ from keras.optimizers import SGD
 from keras.callbacks import Callback
 import numpy as np
 
-def process_network(JSON, callback_sockets):
+def process_network(JSON, callback_sockets, callback_loaded):
 	curr_epoch = 0
 
 	# process data
@@ -49,6 +49,8 @@ def process_network(JSON, callback_sockets):
 		#should send error data to socket callback maybe
 		return
 
+	callback_loaded(JSON, room)
+
 	class Loss(Callback):
 		def on_epoch_end(self, epoch, logs={}):
 			self.values = {"current_epoch": curr_epoch, "total_epochs": JSON["iterations"], "loss": logs.get('loss'), "acc": logs.get('acc'), "val_loss": logs.get('val_loss'), "val_acc": logs.get('val_acc'), "done": False,}
@@ -69,7 +71,7 @@ def process_network(JSON, callback_sockets):
 				  optimizer='adadelta',
 				  metrics=['accuracy'])
 
-	print model.summary()
+	# print model.summary()
 
 	cbk = Loss()
 	# run callback with socket results
