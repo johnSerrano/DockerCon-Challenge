@@ -7,7 +7,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<script src="https://use.fontawesome.com/3cfd69bfa7.js"></script>
-	<link rel="stylesheet" href="social.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script src="https://code.highcharts.com/highcharts.js"></script>
@@ -33,6 +32,11 @@
 					$('#status').html("Loading Network...");
 				}
 				$('#dataset').html("Dataset: " + msg['dataset']);
+				$('#network_details').html("");
+				// for each (var layer in msg["layers"]) {
+				for (var i = 0; i < msg["layers"].length; i++) {
+					$('#network_details').append('<p>DENSE: '+ msg["layers"][i]["size"] +'<p>');
+				}
 			});
 			socket.on('join ack', function() {
 				if ($('#status').html() == "Connecting...") {
@@ -148,8 +152,8 @@
 			/* negative value of footer height */
 			height: 95px;
 		}
-		/* On small screens, set height to 'auto' for sidenav and grid */
 
+		/* On small screens, set height to 'auto' for sidenav and grid */
 		@media screen and (max-width: 767px) {
 			.sidenav {
 				height: auto;
@@ -191,43 +195,67 @@
 	<div class="container-fluid text-left main-body">
 		<br>
 		<div class="row">
-			<div class="col-xs-12 col-sm-6 com-md-6 col-lg-6">
-				<h1 id="status">Connecting...</h1>
-			</div>
-			<div class="col-xs-12 col-sm-6 com-md-6 col-lg-6">
-				<!-- network info -->
-				<h1 id="dataset"></h1>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-12">
-				<h3>Iterations</h3>
-				<div class="progress">
-					<div id="progress_bar_epochs" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%">
-						0%
+			<div id="leftinfo_contain" class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+				<div class="row">
+					<div class="col-xs-12 col-sm-6 com-md-6 col-lg-6">
+						<h1 id="status">Connecting...</h1>
 					</div>
+					<div class="col-xs-12 col-sm-6 com-md-6 col-lg-6">
+						<!-- network info -->
+						<h1 id="dataset"></h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<h3>Iterations</h3>
+						<div class="progress">
+							<div id="progress_bar_epochs" class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+								0%
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3">
+						<h3>Training Accuracy</h3>
+						<p id="acc">0.00</p>
+					</div>
+					<div class="col-sm-3">
+						<h3>Training Loss</h3>
+						<p id="loss">0.00</p>
+					</div>
+					<div class="col-sm-3">
+						<h3>Test Accuracy</h3>
+						<p id="val_acc">0.00</p>
+					</div>
+					<div class="col-sm-3">
+						<h3>Test Loss</h3>
+						<p id="val_loss">0.00</p>
+					</div>
+				</div>
+				<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+			</div>
+			<div id="rightinfo_contain" class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+				<div id="rightinfo_well" class="well well-lg">
+					<h1>Other info</h1>
+					<div class="row">
+						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+							<h3>Sample Results</h3>
+							<div id="sample_results">
+								<p>TODO</p>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+							<h3>Network Details</h3>
+							<div id="network_details">
+								<p>Loading...</p>
+							</div>
+						</div>
+					</div>
+					<h3>And whatever else</h3>
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-sm-3">
-				<h3>Training Accuracy</h3>
-				<p id="acc">0.00</p>
-			</div>
-			<div class="col-sm-3">
-				<h3>Training Loss</h3>
-				<p id="loss">0.00</p>
-			</div>
-			<div class="col-sm-3">
-				<h3>Test Accuracy</h3>
-				<p id="val_acc">0.00</p>
-			</div>
-			<div class="col-sm-3">
-				<h3>Test Loss</h3>
-				<p id="val_loss">0.00</p>
-			</div>
-		</div>
-		<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 	</div>
 
 	<footer class="footer">
