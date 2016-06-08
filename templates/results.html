@@ -57,6 +57,18 @@
 					$('#status').html("Running Network...");
 				}
 
+				console.log(msg);
+
+				$('#sample_results').html("")
+				for (var i = 0; i < msg["predictions"].length; i++) {
+					var myid = "result_" + i;
+					$('#sample_results').append('<div class="col-xs-6 col-sm-4 col-md-4 col-lg-4" id="'+ myid +'">');
+					$('#'+ myid +'').append(msg["predictions"][i]["img_tag"]);
+					$('#'+ myid +'').append("<p>Predicted: " + msg["predictions"][i]["predicted"] + "</p>");
+					$('#'+ myid +'').append("<p>Expected: " + msg["predictions"][i]["expected"] + "</p>");
+					$('#'+ myid +'').append("<br>");
+				}
+
 				data1.push(msg["acc"])
 				data2.push(msg["val_acc"])
 
@@ -241,8 +253,8 @@
 					<div class="row">
 						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 							<h3>Sample Results</h3>
-							<div id="sample_results">
-								<p>TODO</p>
+							<div class="row" id="sample_results">
+								<p>Loading...</p>
 							</div>
 						</div>
 						<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -252,7 +264,6 @@
 							</div>
 						</div>
 					</div>
-					<h3>And whatever else</h3>
 				</div>
 			</div>
 		</div>

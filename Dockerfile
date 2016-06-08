@@ -8,4 +8,5 @@ COPY network.py /usr/src/app/network.py
 COPY templates/results.html /usr/src/app/templates/
 COPY templates/social.css /usr/src/app/templates/
 COPY templates/index.html /usr/src/app/templates/
+RUN mkdir /usr/src/app/results
 CMD ["python", "/usr/src/app/app.py"]

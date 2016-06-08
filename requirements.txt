@@ -5,3 +5,4 @@ keras
 six
 flask
 flask_socketio
+PyPNG

@@ -4,14 +4,22 @@ from keras.utils import np_utils
 from keras.optimizers import SGD
 from keras.callbacks import Callback
 import numpy as np
+import png
+import random
+
+room = ""
+dataset = None
+model = Sequential()
 
 def process_network(JSON, callback_sockets, callback_loaded):
+	global room
+	global dataset
+	global model
 	curr_epoch = 0
 
 	# process data
-	dataset = None
+
 	result = []
-	model = Sequential()
 	room = JSON["room"]
 
 	if JSON["dataset"] == "mnist":
@@ -27,7 +35,23 @@ def process_network(JSON, callback_sockets, callback_loaded):
 
 	class Loss(Callback):
 		def on_epoch_end(self, epoch, logs={}):
-			self.values = {"current_epoch": curr_epoch, "total_epochs": JSON["iterations"], "loss": logs.get('loss'), "acc": logs.get('acc'), "val_loss": logs.get('val_loss'), "val_acc": logs.get('val_acc'), "done": False,}
+			global room
+			self.values = {"current_epoch": curr_epoch,
+				"total_epochs": JSON["iterations"],
+				"loss": logs.get('loss'),
+				"acc": logs.get('acc'),
+				"val_loss": logs.get('val_loss'),
+				"val_acc": logs.get('val_acc'),
+				"done": False,
+				"predictions": [],
+				# "expected": [],
+				# "samples": [],
+			}
+			for i in range(9):
+				d = sample_result(dataset, model, i)
+				# self.values["samples"].append(d["img_tag"])
+				self.values["predictions"].append(d)
+				# self.values["expected"].append(d["expected"])
 			callback_sockets(self.values, room)
 
 	# generate layers, only dense for now
@@ -69,21 +93,55 @@ def process_network(JSON, callback_sockets, callback_loaded):
 
 	return 'Test accuracy: ' + str(result[1]) + '\n'
 
+#TODO return sample image from dataset
+def sample_result(dataset, model, count):
+	# TODO select random element from test dataset
+	random_selection = random.randrange(dataset["x_test"].shape[0])
+
+	image_location = str(room) + "_" + str(count)
+
+	# TODO deal with different PNG_modes (function for each mode) (set in dataset)
+	if dataset["PNG_mode"] == "L":
+		png_l(np.copy(dataset["x_test"][random_selection]), dataset, "/usr/src/app/results/" + image_location)
+		data_uri = open("/usr/src/app/results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
+		img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
+	else:
+		#TODO: return empty image
+		return {}
+
+	# TODO: predict only one element
+	predictions = model.predict_classes(dataset["x_test"], batch_size=128, verbose=0)
+	predict = predictions.tolist()[random_selection]
+
+	return {
+		"expected": dataset["y_test"].tolist()[random_selection].index(1),
+		"predicted": predict,
+		"img_tag": img_tag,
+	}
+
+def png_l(arr, dataset, location):
+	#grayscale png image
+	with open(location, 'wb') as f:
+		arr *= 255
+		arr = arr.reshape(dataset["img_rows"], dataset["img_cols"])
+		w = png.Writer(dataset["img_rows"], dataset["img_cols"], greyscale=True)
+		w.write(f, arr)
 
 def dataset_mnist():
 	from keras.datasets import mnist
 	dataset = {
 		"name": "mnist"
 	}
-	img_rows, img_cols = 28, 28
+	dataset["img_rows"], dataset["img_cols"] = 28, 28
 	dataset["nb_classes"] = 10
 	dataset["batch_size"] = 128
 	dataset["epochs_until_report"] = 1
 	dataset["input_shape"] = (28*28,)
+	dataset["PNG_mode"] = "L"
 
 	(dataset["x_train"], dataset["y_train"]), (dataset["x_test"], dataset["y_test"]) = mnist.load_data()
-	dataset["x_train"] = dataset["x_train"].reshape(dataset["x_train"].shape[0], img_rows * img_cols)
-	dataset["x_test"] = dataset["x_test"].reshape(dataset["x_test"].shape[0], img_rows * img_cols)
+	dataset["x_train"] = dataset["x_train"].reshape(dataset["x_train"].shape[0], dataset["img_rows"] * dataset["img_cols"])
+	dataset["x_test"] = dataset["x_test"].reshape(dataset["x_test"].shape[0], dataset["img_rows"] * dataset["img_cols"])
 	dataset["x_train"] = dataset["x_train"].astype('float32')
 	dataset["x_test"] = dataset["x_test"].astype('float32')
 	dataset["x_train"] /= 255
@@ -99,16 +157,17 @@ def dataset_cifar10():
 	dataset = {
 		"name": "CIFAR 10"
 	}
-	img_rows, img_cols = 32, 32
+	img_rows, dataset["img_cols"] = 32, 32
 	img_channels = 3
 	dataset["nb_classes"] = 10
 	dataset["batch_size"] = 128
 	dataset["epochs_until_report"] = 1
-	dataset["input_shape"] = (img_rows * img_cols * img_channels,)
+	dataset["input_shape"] = (dataset["img_rows"] * dataset["img_cols"] * dataset["img_channels"],)
+	dataset["PNG_mode"] = "RGB"
 
 	(dataset["x_train"], dataset["y_train"]), (dataset["x_test"], dataset["y_test"]) = cifar10.load_data()
-	dataset["x_train"] = dataset["x_train"].reshape(dataset["x_train"].shape[0], img_rows * img_cols * img_channels)
-	dataset["x_test"] = dataset["x_test"].reshape(dataset["x_test"].shape[0], img_rows * img_cols * img_channels)
+	dataset["x_train"] = dataset["x_train"].reshape(dataset["x_train"].shape[0], dataset["img_rows"] * dataset["img_cols"] * dataset["img_channels"])
+	dataset["x_test"] = dataset["x_test"].reshape(dataset["x_test"].shape[0], dataset["img_rows"] * dataset["img_cols"] * dataset["img_channels"])
 	dataset["x_train"] = dataset["x_train"].astype('float32')
 	dataset["x_test"] = dataset["x_test"].astype('float32')
 	dataset["x_train"] /= 255
