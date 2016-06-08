@@ -60,9 +60,7 @@ def test_connect():
 def join(message):
     join_room(message['room'])
     session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('room joined',
-         {'data': 'In rooms: ' + ', '.join(rooms()),
-          'count': session['receive_count']})
+    socketio.emit("join ack", room=message['room'])
 
 
 @socketio.on('disconnect request')

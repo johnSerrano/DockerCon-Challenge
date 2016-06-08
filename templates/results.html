@@ -28,6 +28,11 @@
 			socket.on('room joined', function() {
 				console.log('joined room');
 			})
+			socket.on('join ack', function() {
+				if ($('#status').html() == "Connecting...") {
+					$('#status').html("Loading Network...");
+				}
+			})
 			socket.on('progress', function(msg) {
 				// $('#log').append('<p>Received: ' + msg.data + '</p>');
 				var finished_percentage = (parseInt(msg["current_epoch"]) / parseInt(msg["total_epochs"])) * 100
@@ -38,12 +43,19 @@
 				$("#val_acc").html(msg["val_acc"])
 				$("#val_loss").html(msg["val_loss"])
 
+				if ($('#status').html() == "Loading Network...") {
+					$('#status').html("Running Network...");
+				}
+
 				data1.push(msg["acc"])
 				data2.push(msg["val_acc"])
 
 				if (msg["done"] == true) {
 					$('#progress_bar_epochs').toggleClass("progress-bar-striped active progress-bar-success")
                 			socket.emit('disconnect request');
+					if ($('#status').html() == "Running Network...") {
+						$('#status').html("Complete");
+					}
 				} else {
 					chart(data1, data2)
 				}
@@ -172,7 +184,15 @@
 
 	<div class="container-fluid text-left main-body">
 		<br>
-		<h1>Current Progress</h1>
+		<div class="row">
+			<div class="col-xs-12 col-sm-6 com-md-6 col-lg-6">
+				<h1 id="status">Connecting...</h1>
+			</div>
+			<div class="col-xs-12 col-sm-6 com-md-6 col-lg-6">
+				<!-- network info -->
+				<h1>Dataset: MNIST</h1>
+			</div>
+		</div>
 		<div class="row">
 			<div class="col-sm-12">
 				<h3>Iterations</h3>
