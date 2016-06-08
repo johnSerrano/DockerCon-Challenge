@@ -22,10 +22,6 @@ def runnetwork():
 	content = request.get_json()
 	if not content:
 		return "No JSON posted"
-	print content["layers"]
-	print content["dataset"]
-	print content["iterations"]
-	print content["room"]
 	t = Thread(target=process_network, args=(content, progress_socket_callback, loaded_network_callback))
 	t.start()
 	return "JSON posted successfully"
@@ -40,19 +36,15 @@ def results():
 #use websockets to post the progress and results of the network
 def progress_socket_callback(progress, room):
 	socketio.emit('progress', progress, room=room)
-	if progress["done"]:
-		print "Done!",
-	print str(progress["current_epoch"]) + '/' + str(progress["total_epochs"])
-	print str(progress["val_acc"])
 
 
 def loaded_network_callback(loaded, room):
 	socketio.emit('loaded', loaded, room=room)
 
 
-@socketio.on('connect')
-def test_connect():
-    print('socketio connected')
+# @socketio.on('connect')
+# def test_connect():
+#     pass
 
 
 @socketio.on('join')
@@ -65,7 +57,6 @@ def join(message):
 @socketio.on('disconnect request')
 def disconnect_request():
 	session['receive_count'] = session.get('receive_count', 0) + 1
-	print "****disconnected****"
 	disconnect()
 
 
