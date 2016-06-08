@@ -19,9 +19,11 @@
 			var data2 = []
 			chart(data1, data2)
 
+			var room = getURLParameter("room");
+
 			var socket = io.connect('http://' + document.domain + ':' + location.port);
 			socket.on('connect', function(){
-				socket.emit('join', {room: 'results_room'});
+				socket.emit('join', {room: room});
 			});
 			socket.on('room joined', function() {
 				console.log('joined room');
@@ -47,6 +49,12 @@
 				}
 			});
 		});
+
+		function getURLParameter(name) {
+		  return decodeURI(
+		      (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
+		  );
+		}
 
 		function chart(data1, data2) {
 			$(function () {

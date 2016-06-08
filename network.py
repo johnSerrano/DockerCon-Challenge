@@ -16,6 +16,7 @@ def process_network(JSON, callback_sockets):
 	result = []
 	input_dim = (None, None)
 	model = Sequential()
+	room = JSON["room"]
 
 	if JSON["dataset"] == "mnist":
 		from keras.datasets import mnist
@@ -51,7 +52,7 @@ def process_network(JSON, callback_sockets):
 	class Loss(Callback):
 		def on_epoch_end(self, epoch, logs={}):
 			self.values = {"current_epoch": curr_epoch, "total_epochs": JSON["iterations"], "loss": logs.get('loss'), "acc": logs.get('acc'), "val_loss": logs.get('val_loss'), "val_acc": logs.get('val_acc'), "done": False,}
-			callback_sockets(self.values)
+			callback_sockets(self.values, room)
 
 	# generate layers, only dense for now
 	for i, layer in enumerate(JSON["layers"]):
@@ -88,6 +89,6 @@ def process_network(JSON, callback_sockets):
 								verbose=0,
 								sample_weight=None)
 	cbk.values["done"] = True
-	callback_sockets(cbk.values)
+	callback_sockets(cbk.values, room)
 
 	return 'Test accuracy: ' + str(result[1]) + '\n'

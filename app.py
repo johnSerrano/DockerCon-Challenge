@@ -20,12 +20,12 @@ def index():
 @app.route('/runnetwork', methods=["POST"])
 def runnetwork():
 	content = request.get_json()
+	if not content:
+		return "No JSON posted"
 	print content["layers"]
 	print content["dataset"]
 	print content["iterations"]
-	if not content:
-		return "No JSON posted"
-	print "*****RUNNING NEW THREAD*****"
+	print content["room"]
 	t = Thread(target=process_network, args=(content, progress_socket_callback))
 	t.start()
 	return "JSON posted successfully"
@@ -42,14 +42,9 @@ def test_post():
 	return render_template("test_post.html")
 
 
-@app.route('/social.css')
-def css():
-	return render_template("social.css")
-
-
 #use websockets to post the progress and results of the network
-def progress_socket_callback(progress):
-	socketio.emit('progress', progress)
+def progress_socket_callback(progress, room):
+	socketio.emit('progress', progress, room=room)
 	if progress["done"]:
 		print "Done!",
 	print str(progress["current_epoch"]) + '/' + str(progress["total_epochs"])

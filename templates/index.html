@@ -21,8 +21,20 @@
 			console.log(counter);
 		}
 
+		function makeid() {
+		  var text = "";
+		  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+		  for( var i=0; i < 10; i++ )
+		      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+		  return text;
+		}
+
 		function form_to_json() {
-			var data = {"layers": [], "iterations": 0, "dataset": "----"}
+			var room = makeid();
+
+			var data = {"layers": [], "iterations": 0, "dataset": "----", "room": room};
 			var count = 1;
 			var layer = document.getElementById("layer" + count);
 			while (layer != null) {
@@ -45,7 +57,7 @@
 			xhr.onloadend = function () {
 			  // done
 			};
-			window.location.href = "/results";
+			window.location.href = "/results?room=" + room;
 		}
 	</script>
 	<style>
