@@ -105,6 +105,10 @@ def sample_result(dataset, model, count):
 		png_l(np.copy(dataset["x_test"][random_selection]), dataset, "/usr/src/app/results/" + image_location)
 		data_uri = open("/usr/src/app/results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
 		img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
+	elif dataset["PNG_mode"] == "RGB":
+		png_rgb(np.copy(dataset["x_test"][random_selection]), dataset, "/usr/src/app/results/" + image_location)
+		data_uri = open("/usr/src/app/results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
+		img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
 	else:
 		#TODO: return empty image
 		return {}
@@ -126,6 +130,27 @@ def png_l(arr, dataset, location):
 		arr = arr.reshape(dataset["img_rows"], dataset["img_cols"])
 		w = png.Writer(dataset["img_rows"], dataset["img_cols"], greyscale=True)
 		w.write(f, arr)
+
+def png_rgb(arr, dataset, location):
+	arr *= 255
+	arr = arr.reshape(dataset["img_rows"]*dataset["img_cols"]*dataset["img_channels"])
+	pixels = []
+	image = []
+
+	for i in range(dataset["img_rows"]*dataset["img_cols"]):
+		pixel = [arr[i], arr[i+(dataset["img_rows"]*dataset["img_cols"])],
+				 arr[i+(dataset["img_rows"]*dataset["img_cols"]*2)]]
+		pixels += [pixel]
+
+	for i in range(dataset["img_rows"]):
+		row = []
+		for j in range(dataset["img_cols"]):
+			row += pixels[(dataset["img_cols"]*i)+j]
+		image += [row]
+
+	with open(location, 'wb') as f:
+		w = png.Writer(dataset["img_rows"], dataset["img_cols"])
+		w.write(f, image)
 
 def dataset_mnist():
 	from keras.datasets import mnist
@@ -157,8 +182,8 @@ def dataset_cifar10():
 	dataset = {
 		"name": "CIFAR 10"
 	}
-	img_rows, dataset["img_cols"] = 32, 32
-	img_channels = 3
+	dataset["img_rows"], dataset["img_cols"] = 32, 32
+	dataset["img_channels"] = 3
 	dataset["nb_classes"] = 10
 	dataset["batch_size"] = 128
 	dataset["epochs_until_report"] = 1
