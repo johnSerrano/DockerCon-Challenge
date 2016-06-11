@@ -28,7 +28,6 @@
 				denseoptions.style.display = 'none';
 				convoptions.style.display = 'none';
 				pooloptions.style.display = 'none';
-				console.log(selector.value);
 				switch (selector.value) {
 					case "dense":
 						denseoptions.style.display = 'block';
@@ -43,25 +42,30 @@
 			});
 
 			//TODO add new layer onclick listener to + button
+			var new_button = findClass(layer, "new-button");
+			new_button.addEventListener("click", function() {
+				addLayer(layer);
+			})
 			//TODO add delete onclick listener to X button
 
 		}
 
-		function addLayer() {
+		function addLayer(pre_layer) {
 			var layer = document.createElement("div");
-			document.getElementById("layers_contain").appendChild(layer);
-			layer.className = "well well-lg";
+			console.log(pre_layer);
+			document.getElementById("layers_contain").insertBefore(layer, pre_layer.nextSibling);
+			layer.className = "well well-lg layer";
 			layer.id = "active";
 			//There's probably a better way to do this
 			$("#active").html(
-			'<div class="form-group layer">\
+			'<div class="form-group">\
 				<div class="Row">\
 				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
 				    <label for="layer">Layer</label>\
 				  </div>\
 				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 alignright">\
-				    <div class="material-icons">add</div>\
-				    <div class="material-icons">clear</div>\
+				    <div class="material-icons new-button">add</div>\
+				    <div class="material-icons del-button">clear</div>\
 				  </div>\
 				  <div class="form-group layer-types">\
 				    <label>Layer type:</label>\
@@ -140,7 +144,6 @@
 			);
 			layer.id = "inactive";
 			link_layer(layer);
-			console.log(layer);
 		}
 
 		function makeid() {
@@ -299,15 +302,15 @@
 		<div class="row">
 			<form role="form" method="post">
 				<div id="layers_contain" class="col-sm-6 text-left">
-					<div class="well well-lg">
-						<div class="form-group layer">
+					<div class="well well-lg layer">
+						<div class="form-group">
 							<div class="Row">
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 									<label for="layer">Layer</label>
 								</div>
 								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 alignright">
-									<div class="material-icons">add</div>
-									<div class="material-icons">clear</div>
+									<div class="material-icons new-button">add</div>
+									<div class="material-icons del-button">clear</div>
 								</div>
 								<div class="form-group layer-types">
 									<label>Layer type:</label>
