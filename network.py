@@ -11,12 +11,11 @@ import random
 
 def process_network(JSON, callback_sockets, callback_loaded):
 	def sample_result(dataset, model, count):
-		# TODO select random element from test dataset
 		random_selection = random.randrange(dataset["x_test"].shape[0])
 
 		image_location = str(room) + "_" + str(count)
 
-		# TODO deal with different PNG_modes (function for each mode) (set in dataset)
+		#TODO support alpha channel
 		if dataset["PNG_mode"] == "L":
 			png_l(np.copy(dataset["x_test"][random_selection]), dataset, "results/" + image_location)
 			data_uri = open("results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
@@ -34,8 +33,8 @@ def process_network(JSON, callback_sockets, callback_loaded):
 		predict = predictions.tolist()[random_selection]
 
 		return {
-			"expected": dataset["y_test"].tolist()[random_selection].index(1),
-			"predicted": predict,
+			"expected": dataset["classes"][dataset["y_test"].tolist()[random_selection].index(1)],
+			"predicted": dataset["classes"][predict],
 			"img_tag": img_tag,
 		}
 
@@ -70,14 +69,10 @@ def process_network(JSON, callback_sockets, callback_loaded):
 				"val_acc": logs.get('val_acc'),
 				"done": False,
 				"predictions": [],
-				# "expected": [],
-				# "samples": [],
 			}
 			for i in range(9):
 				d = sample_result(dataset, model, i)
-				# self.values["samples"].append(d["img_tag"])
 				self.values["predictions"].append(d)
-				# self.values["expected"].append(d["expected"])
 			callback_sockets(self.values, room)
 
 	# generate layers, only dense for now
@@ -155,6 +150,18 @@ def dataset_mnist():
 	dataset = {
 		"name": "mnist"
 	}
+	dataset["classes"] = {
+		0: "0",
+		1: "1",
+		2: "2",
+		3: "3",
+		4: "4",
+		5: "5",
+		6: "6",
+		7: "7",
+		8: "8",
+		9: "9",
+	}
 	dataset["img_rows"], dataset["img_cols"] = 28, 28
 	dataset["nb_classes"] = 10
 	dataset["batch_size"] = 128
@@ -179,6 +186,18 @@ def dataset_cifar10():
 	from keras.datasets import cifar10
 	dataset = {
 		"name": "CIFAR 10"
+	}
+	dataset["classes"] = {
+		0: "Plane",
+		1: "Car",
+		2: "Bird",
+		3: "Cat",
+		4: "Deer",
+		5: "Dog",
+		6: "Frog",
+		7: "Horse",
+		8: "Ship",
+		9: "Truck",
 	}
 	dataset["img_rows"], dataset["img_cols"] = 32, 32
 	dataset["img_channels"] = 3
