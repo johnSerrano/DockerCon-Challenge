@@ -102,12 +102,12 @@ def sample_result(dataset, model, count):
 
 	# TODO deal with different PNG_modes (function for each mode) (set in dataset)
 	if dataset["PNG_mode"] == "L":
-		png_l(np.copy(dataset["x_test"][random_selection]), dataset, "/usr/src/app/results/" + image_location)
-		data_uri = open("/usr/src/app/results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
+		png_l(np.copy(dataset["x_test"][random_selection]), dataset, "results/" + image_location)
+		data_uri = open("results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
 		img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
 	elif dataset["PNG_mode"] == "RGB":
-		png_rgb(np.copy(dataset["x_test"][random_selection]), dataset, "/usr/src/app/results/" + image_location)
-		data_uri = open("/usr/src/app/results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
+		png_rgb(np.copy(dataset["x_test"][random_selection]), dataset, "results/" + image_location)
+		data_uri = open("results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
 		img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
 	else:
 		#TODO: return empty image
