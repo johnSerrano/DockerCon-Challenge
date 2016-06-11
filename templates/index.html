@@ -7,45 +7,89 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<script src="https://use.fontawesome.com/3cfd69bfa7.js"></script>
-	<link rel="stylesheet" href="social.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script>
+		$(document).ready(function() {
+			// add listeners to layer 1
+			var layers = $(".layer");
+			for (var i = 0; i < layers.length; i++) {
+				link_layer(layers[i]);
+			}
+		});
 		var counter = 1;
 
+		//TODO link_layer function to add handlers to a layer element
+		function link_layer(layer) {
+			//TODO add onchange listener to selector
+			var selector = findClass(layer, "layer-type");
+			selector.addEventListener("change", function() {
+				var denseoptions = findClass(layer, "layer-dense-options");
+				var convoptions = findClass(layer, "layer-convolutional2d-options");
+				var pooloptions = findClass(layer, "layer-maxpooling-options");
+				denseoptions.style.display = 'none';
+				convoptions.style.display = 'none';
+				pooloptions.style.display = 'none';
+				//TODO unhide based on selector value
+				console.log(selector.value);
+				switch (selector.value) {
+					case "dense":
+						denseoptions.style.display = 'block';
+						break;
+					case "conv2d":
+						convoptions.style.display = 'block';
+						break;
+					case "pool":
+						pooloptions.style.display = 'block';
+						break;
+				}
+			});
+
+			//TODO add new layer onclick listener to + button
+			//TODO add delete onclick listener to X button
+
+		}
+
+		//TODO remake this function with new layer attributes
 		function addLayer(divName) {
 			var newdiv = document.createElement('div');
 			newdiv.innerHTML = "<label for=\"layer" + (counter + 1) + "\">Layer " + (counter + 1) + ":</label> <input type=\"text\" value=\"10\" class=\"form-control\" id=\"layer" + (counter + 1) + "\"><p>neurons</p>";
 			document.getElementById(divName).appendChild(newdiv);
 			counter++;
-			console.log(counter);
 		}
 
 		function makeid() {
-		  var text = "";
-		  var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			var text = "";
+			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-		  for( var i=0; i < 10; i++ )
-		      text += possible.charAt(Math.floor(Math.random() * possible.length));
+			for (var i = 0; i < 10; i++)
+				text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-		  return text;
+			return text;
 		}
 
+		//TODO update to use new layer configuration
 		function form_to_json() {
 			var room = makeid();
 
-			var data = {"layers": [], "iterations": 0, "dataset": "----", "room": room};
+			var data = {
+				"layers": [],
+				"iterations": 0,
+				"dataset": "----",
+				"room": room
+			};
 			var count = 1;
 			var layer = document.getElementById("layer" + count);
 			while (layer != null) {
-				data["layers"].push({"size": parseInt(layer.value)});
+				data["layers"].push({
+					"size": parseInt(layer.value)
+				});
 				count += 1;
 				layer = document.getElementById("layer" + count);
 			}
 			data["iterations"] = parseInt(document.getElementById("iters").value);
 			data["dataset"] = document.getElementById("dataset").value;
-
-			console.log(data);
 
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", "/runnetwork", true);
@@ -54,20 +98,40 @@
 			// send the collected data as JSON
 			xhr.send(JSON.stringify(data));
 
-			xhr.onloadend = function () {
-			  // done
+			xhr.onloadend = function() {
+				// done
 			};
 			window.location.href = "/results?room=" + room;
+		}
+
+		// http://stackoverflow.com/questions/12166753/how-to-get-child-element-by-class-name#12166811
+		function findClass(element, className) {
+			var foundElement = null,
+				found;
+
+			function recurse(element, className, found) {
+				for (var i = 0; i < element.childNodes.length && !found; i++) {
+					var el = element.childNodes[i];
+					var classes = el.className != undefined ? el.className.split(" ") : [];
+					for (var j = 0, jl = classes.length; j < jl; j++) {
+						if (classes[j] == className) {
+							found = true;
+							foundElement = element.childNodes[i];
+							break;
+						}
+					}
+					if (found)
+						break;
+					recurse(element.childNodes[i], className, found);
+				}
+			}
+			recurse(element, className, false);
+			return foundElement;
 		}
 	</script>
 	<style>
 		/* Remove the navbar's default margin-bottom and rounded borders */
-
-		.navbar {
-			margin-bottom: 0;
-			border-radius: 0;
-		}
-		/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+		/*.navbar {DOCUMENT_POSITION_PRECEDING(adjust as needed) */
 
 		.row.content {
 			height: 450px
@@ -84,6 +148,10 @@
 			overflow: auto;
 			padding-bottom: 100px;
 			height: 100%;
+		}
+
+		.alignright {
+			text-align: right;
 		}
 
 		footer {
@@ -142,9 +210,7 @@
 			<div class="col-sm-12 text-left">
 				<h1>Deep Whaling</h1>
 				<h4>About:</h4>
-				<p><strong>Deep Whaling</strong> is an open source GUI to run <a href="http://keras.io/">Keras</a>,
-					a highly modular neural networks library while running in a <a href="https://www.docker.com">Docker</a>
-					container. This makes <strong>Deep Whaling</strong> a very easy tool to learn about deep learning!</p>
+				<p><strong>Deep Whaling</strong> is an open source GUI to run <a href="http://keras.io/">Keras</a>, a highly modular neural networks library while running in a <a href="https://www.docker.com">Docker</a> container. This makes <strong>Deep Whaling</strong>					a very easy tool to learn about deep learning!</p>
 				<h4>How to use <strong>Deep Whaling</strong>:</h4>
 				<p>To run <strong>Deep Whaling</strong>, you just have to follow 4 easy steps:</p>
 				<ul>
@@ -153,36 +219,120 @@
 			</div>
 		</div>
 		<div class="row">
-			<form role="form" method="post" action="runnetwork">
+			<form role="form" method="post">
 				<div class="col-sm-6 text-left">
-					<div id="add_layer" class="form-group">
+					<!-- <div id="add_layer" class="form-group">
 						<input type="button" value="Add another layer" class="btn btn-default" onclick="addLayer('layer');">
 						</button>
-					</div>
-					<div id="layer" class="form-group">
-						<!-- JS added. put notes here TODO delete button -->
-						<label for="layer1">Layer 1:</label>
-						<input type="text" value="10" class="form-control" id="layer1">
-						<p> neurons</p>
+					</div> -->
+					<div class="well well-lg">
+						<div class="form-group layer">
+							<div class="Row">
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+									<label for="layer">Layer</label>
+								</div>
+								<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 alignright">
+									<div class="material-icons">add</div>
+									<div class="material-icons">clear</div>
+								</div>
+								<div class="form-group layer-types">
+									<label>Layer type:</label>
+									<select class="form-control layer-type">
+										<option value="dense">Dense</option>
+										<option value="conv2d">Convolutional 2D</option>
+										<option value="pool">Max Pooling</option>
+									</select>
+								</div>
+								<div class="layer-dense-options" style="display: none;">
+									<!-- <div class="layer-dense-options"> -->
+									<label>Number of neurons:</label>
+									<input type="text" value="10" class="form-control dense-size">
+								</div>
+								<!-- hidden by default -->
+								<div class="layer-convolutional2d-options" style="display: none;">
+									<!-- <div class="layer-convolutional2d-options" > -->
+									<div class="row">
+										<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+											<label>Filter size:</label>
+											<div class="row">
+												<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+													<div class="input-group">
+														<span class="input-group-addon" id="basic-addon1">X</span>
+														<input type="text" value="5" class="form-control filter-size-x">
+													</div>
+												</div>
+												<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+													<div class="input-group">
+														<span class="input-group-addon" id="basic-addon1">Y</span>
+														<input type="text" value="5" class="form-control filter-size-y">
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+											<label>Stride:</label>
+											<div class="row">
+												<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+													<div class="input-group">
+														<span class="input-group-addon" id="basic-addon1">X</span>
+														<input type="text" value="1" class="form-control conv-stride-x">
+													</div>
+												</div>
+												<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+													<div class="input-group">
+														<span class="input-group-addon" id="basic-addon1">Y</span>
+														<input type="text" value="1" class="form-control conv-stride-y">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<br>
+									<label>Number of filters:</label>
+									<input type="text" value="10" class="form-control convolutional-size">
+								</div>
+								<!-- hidden by default -->
+								<!-- <div class="layer-maxpooling-options" style="display: none;"> -->
+								<div class="layer-maxpooling-options">
+									<label>Stride:</label>
+									<div class="row">
+										<div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">
+											<div class="input-group">
+												<span class="input-group-addon" id="basic-addon1">X</span>
+												<input type="text" value="1" class="form-control conv-stride-x">
+											</div>
+										</div>
+										<div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">
+											<div class="input-group">
+												<span class="input-group-addon" id="basic-addon1">Y</span>
+												<input type="text" value="1" class="form-control conv-stride-y">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 
 					</div>
 				</div>
 				<div class="col-sm-6 text-left">
-					<div id="datasets" class="form-group">
-						<label for="dataset">Select dataset:</label>
-						<select class="form-control" id="dataset">
-							<option>mnist</option>
-							<option>cifar 10</option>
-							<option>-</option>
-							<option>-</option>
-						</select>
-					</div>
-					<div id="iterations" class="form-group">
-						<label for="iters">iterations:</label>
-						<input type="text" value="10" class="form-control" id="iters">
-						<p> iterations</p>
+					<div class="well well-lg">
+						<div id="datasets" class="form-group">
+							<label for="dataset">Select dataset:</label>
+							<select class="form-control" id="dataset">
+								<option>mnist</option>
+								<option>cifar 10</option>
+								<option>-</option>
+								<option>-</option>
+							</select>
+						</div>
+						<div id="iterations" class="form-group">
+							<label for="iters">iterations:</label>
+							<input type="text" value="10" class="form-control" id="iters">
+							<p> iterations</p>
+						</div>
 					</div>
 				</div>
 				<div class="col-sm-12 text-center">
