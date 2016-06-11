@@ -132,13 +132,13 @@
 				      <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">\
 				        <div class="input-group">\
 				          <span class="input-group-addon" id="basic-addon1">X</span>\
-				          <input type="text" value="1" class="form-control conv-stride-x">\
+				          <input type="text" value="1" class="form-control pool-stride-x">\
 				        </div>\
 				      </div>\
 				      <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">\
 				        <div class="input-group">\
 				          <span class="input-group-addon" id="basic-addon1">Y</span>\
-				          <input type="text" value="1" class="form-control conv-stride-y">\
+				          <input type="text" value="1" class="form-control pool-stride-y">\
 				        </div>\
 				      </div>\
 				    </div>\
@@ -160,7 +160,6 @@
 			return text;
 		}
 
-		//TODO update to use new layer configuration
 		function form_to_json() {
 			var room = makeid();
 
@@ -170,15 +169,22 @@
 				"dataset": "----",
 				"room": room
 			};
-			var count = 1;
-			var layer = document.getElementById("layer" + count);
-			while (layer != null) {
+
+			var layers = $(".layer");
+			for (var i=0 ; i<layers.length ; i++) {
 				data["layers"].push({
-					"size": parseInt(layer.value)
-				});
-				count += 1;
-				layer = document.getElementById("layer" + count);
+					"type": findClass(layers[i], "layer-type").value,//TODO
+					"dense-size": parseInt(findClass(layers[i], "dense-size").value), //TODO
+					"conv-size": parseInt(findClass(layers[i], "convolutional-size").value), //TODO
+					"conv-x": parseInt(findClass(layers[i], "filter-size-x").value), //TODO
+					"conv-y": parseInt(findClass(layers[i], "filter-size-y").value), //TODO
+					"stride-x": parseInt(findClass(layers[i], "conv-stride-x").value), //TODO
+					"stride-y": parseInt(findClass(layers[i], "conv-stride-y").value), //TODO
+					"pool-x": parseInt(findClass(layers[i], "pool-stride-x").value), //TODO
+					"pool-y": parseInt(findClass(layers[i], "pool-stride-y").value), //TODO
+				})
 			}
+
 			data["iterations"] = parseInt(document.getElementById("iters").value);
 			data["dataset"] = document.getElementById("dataset").value;
 
@@ -193,6 +199,7 @@
 				// done
 			};
 			window.location.href = "/results?room=" + room;
+			console.log(data);
 		}
 
 		// http://stackoverflow.com/questions/12166753/how-to-get-child-element-by-class-name#12166811
@@ -378,22 +385,19 @@
 										<div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">
 											<div class="input-group">
 												<span class="input-group-addon" id="basic-addon1">X</span>
-												<input type="text" value="1" class="form-control conv-stride-x">
+												<input type="text" value="1" class="form-control pool-stride-x">
 											</div>
 										</div>
 										<div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">
 											<div class="input-group">
 												<span class="input-group-addon" id="basic-addon1">Y</span>
-												<input type="text" value="1" class="form-control conv-stride-y">
+												<input type="text" value="1" class="form-control pool-stride-y">
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<div class="form-group">
-
 					</div>
 				</div>
 				<div class="col-sm-6 text-left">

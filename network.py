@@ -78,9 +78,9 @@ def process_network(JSON, callback_sockets, callback_loaded):
 	# generate layers, only dense for now
 	for i, layer in enumerate(JSON["layers"]):
 		if i == 0:
-			model.add(Dense(output_dim=layer["size"], input_shape=dataset["input_shape"]))
+			model.add(Dense(output_dim=layer["dense-size"], input_shape=dataset["input_shape"]))
 		else:
-			model.add(Dense(output_dim=layer["size"], input_shape=(JSON["layers"][i-1]["size"],)))
+			model.add(Dense(output_dim=layer["dense-size"], input_shape=(JSON["layers"][i-1]["dense-size"],)))
 		model.add(Activation("relu"))
 	model.add(Dense(dataset["nb_classes"]))
 	model.add(Activation("softmax"))
