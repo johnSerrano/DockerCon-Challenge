@@ -12,7 +12,6 @@
 	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script>
 		$(document).ready(function() {
-			// add listeners to layer 1
 			var layers = $(".layer");
 			for (var i = 0; i < layers.length; i++) {
 				link_layer(layers[i]);
@@ -55,91 +54,91 @@
 			layer.id = "active";
 			//There's probably a better way to do this
 			$("#active").html(
-				'<div class="form-group layer">\
-			<div class="Row">\
-			  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
-			    <label for="layer">Layer</label>\
-			  </div>\
-			  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 alignright">\
-			    <div class="material-icons">add</div>\
-			    <div class="material-icons">clear</div>\
-			  </div>\
-			  <div class="form-group layer-types">\
-			    <label>Layer type:</label>\
-			    <select class="form-control layer-type">\
-			      <option value="dense">Dense</option>\
-			      <option value="conv2d">Convolutional 2D</option>\
-			      <option value="pool">Max Pooling</option>\
-			    </select>\
-			  </div>\
-			  <div class="layer-dense-options">\
-			    <label>Number of neurons:</label>\
-			    <input type="text" value="10" class="form-control dense-size">\
-			  </div>\
-			  <!-- hidden by default -->\
-			    <div class="layer-convolutional2d-options"  style="display: none;">\
-			    <div class="row">\
-			      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
-			        <label>Filter size:</label>\
-			        <div class="row">\
-			          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
-			            <div class="input-group">\
-			              <span class="input-group-addon" id="basic-addon1">X</span>\
-			              <input type="text" value="5" class="form-control filter-size-x">\
-			            </div>\
-			          </div>\
-			          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
-			            <div class="input-group">\
-			              <span class="input-group-addon" id="basic-addon1">Y</span>\
-			              <input type="text" value="5" class="form-control filter-size-y">\
-			            </div>\
-			          </div>\
-			        </div>\
-			      </div>\
-			      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
-			        <label>Stride:</label>\
-			        <div class="row">\
-			          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
-			            <div class="input-group">\
-			              <span class="input-group-addon" id="basic-addon1">X</span>\
-			              <input type="text" value="1" class="form-control conv-stride-x">\
-			            </div>\
-			          </div>\
-			          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
-			            <div class="input-group">\
-			              <span class="input-group-addon" id="basic-addon1">Y</span>\
-			              <input type="text" value="1" class="form-control conv-stride-y">\
-			            </div>\
-			          </div>\
-			        </div>\
-			      </div>\
-			    </div>\
-			    <br>\
-			    <label>Number of filters:</label>\
-			    <input type="text" value="10" class="form-control convolutional-size">\
-			  </div>\
-			  <!-- hidden by default -->\
-			  <div class="layer-maxpooling-options" style="display: none;">\
-			    <label>Stride:</label>\
-			    <div class="row">\
-			      <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">\
-			        <div class="input-group">\
-			          <span class="input-group-addon" id="basic-addon1">X</span>\
-			          <input type="text" value="1" class="form-control conv-stride-x">\
-			        </div>\
-			      </div>\
-			      <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">\
-			        <div class="input-group">\
-			          <span class="input-group-addon" id="basic-addon1">Y</span>\
-			          <input type="text" value="1" class="form-control conv-stride-y">\
-			        </div>\
-			      </div>\
-			    </div>\
-			  </div>\
-			</div>\
+			'<div class="form-group layer">\
+				<div class="Row">\
+				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
+				    <label for="layer">Layer</label>\
+				  </div>\
+				  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 alignright">\
+				    <div class="material-icons">add</div>\
+				    <div class="material-icons">clear</div>\
+				  </div>\
+				  <div class="form-group layer-types">\
+				    <label>Layer type:</label>\
+				    <select class="form-control layer-type">\
+				      <option value="dense">Dense</option>\
+				      <option value="conv2d">Convolutional 2D</option>\
+				      <option value="pool">Max Pooling</option>\
+				    </select>\
+				  </div>\
+				  <div class="layer-dense-options">\
+				    <label>Number of neurons:</label>\
+				    <input type="text" value="10" class="form-control dense-size">\
+				  </div>\
+				  <!-- hidden by default -->\
+				    <div class="layer-convolutional2d-options"  style="display: none;">\
+				    <div class="row">\
+				      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
+				        <label>Filter size:</label>\
+				        <div class="row">\
+				          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
+				            <div class="input-group">\
+				              <span class="input-group-addon" id="basic-addon1">X</span>\
+				              <input type="text" value="5" class="form-control filter-size-x">\
+				            </div>\
+				          </div>\
+				          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
+				            <div class="input-group">\
+				              <span class="input-group-addon" id="basic-addon1">Y</span>\
+				              <input type="text" value="5" class="form-control filter-size-y">\
+				            </div>\
+				          </div>\
+				        </div>\
+				      </div>\
+				      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
+				        <label>Stride:</label>\
+				        <div class="row">\
+				          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
+				            <div class="input-group">\
+				              <span class="input-group-addon" id="basic-addon1">X</span>\
+				              <input type="text" value="1" class="form-control conv-stride-x">\
+				            </div>\
+				          </div>\
+				          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
+				            <div class="input-group">\
+				              <span class="input-group-addon" id="basic-addon1">Y</span>\
+				              <input type="text" value="1" class="form-control conv-stride-y">\
+				            </div>\
+				          </div>\
+				        </div>\
+				      </div>\
+				    </div>\
+				    <br>\
+				    <label>Number of filters:</label>\
+				    <input type="text" value="10" class="form-control convolutional-size">\
+				  </div>\
+				  <!-- hidden by default -->\
+				  <div class="layer-maxpooling-options" style="display: none;">\
+				    <label>Stride:</label>\
+				    <div class="row">\
+				      <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">\
+				        <div class="input-group">\
+				          <span class="input-group-addon" id="basic-addon1">X</span>\
+				          <input type="text" value="1" class="form-control conv-stride-x">\
+				        </div>\
+				      </div>\
+				      <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">\
+				        <div class="input-group">\
+				          <span class="input-group-addon" id="basic-addon1">Y</span>\
+				          <input type="text" value="1" class="form-control conv-stride-y">\
+				        </div>\
+				      </div>\
+				    </div>\
+				  </div>\
+				</div>\
 			</div>'
 			);
-
+			layer.id = "inactive";
 			link_layer(layer);
 			console.log(layer);
 		}
