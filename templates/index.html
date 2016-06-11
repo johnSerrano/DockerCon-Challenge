@@ -41,18 +41,22 @@
 				}
 			});
 
-			//TODO add new layer onclick listener to + button
 			var new_button = findClass(layer, "new-button");
 			new_button.addEventListener("click", function() {
 				addLayer(layer);
 			})
-			//TODO add delete onclick listener to X button
-
+			var del_button = findClass(layer, "del-button");
+			del_button.addEventListener("click", function() {
+				var layers = $(".layer");
+				if (layers.length == 1) {
+					return;
+				}
+				document.getElementById("layers_contain").removeChild(layer);
+			})
 		}
 
 		function addLayer(pre_layer) {
 			var layer = document.createElement("div");
-			console.log(pre_layer);
 			document.getElementById("layers_contain").insertBefore(layer, pre_layer.nextSibling);
 			layer.className = "well well-lg layer";
 			layer.id = "active";
