@@ -7,14 +7,41 @@ import numpy as np
 import png
 import random
 
-room = ""
-dataset = None
-model = Sequential()
+
 
 def process_network(JSON, callback_sockets, callback_loaded):
-	global room
-	global dataset
-	global model
+	def sample_result(dataset, model, count):
+		# TODO select random element from test dataset
+		random_selection = random.randrange(dataset["x_test"].shape[0])
+
+		image_location = str(room) + "_" + str(count)
+
+		# TODO deal with different PNG_modes (function for each mode) (set in dataset)
+		if dataset["PNG_mode"] == "L":
+			png_l(np.copy(dataset["x_test"][random_selection]), dataset, "results/" + image_location)
+			data_uri = open("results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
+			img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
+		elif dataset["PNG_mode"] == "RGB":
+			png_rgb(np.copy(dataset["x_test"][random_selection]), dataset, "results/" + image_location)
+			data_uri = open("results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
+			img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
+		else:
+			#TODO: return empty image
+			return {}
+
+		# TODO: predict only one element
+		predictions = model.predict_classes(dataset["x_test"], batch_size=128, verbose=0)
+		predict = predictions.tolist()[random_selection]
+
+		return {
+			"expected": dataset["y_test"].tolist()[random_selection].index(1),
+			"predicted": predict,
+			"img_tag": img_tag,
+		}
+
+	room = ""
+	dataset = None
+	model = Sequential()
 	curr_epoch = 0
 
 	# process data
@@ -35,7 +62,6 @@ def process_network(JSON, callback_sockets, callback_loaded):
 
 	class Loss(Callback):
 		def on_epoch_end(self, epoch, logs={}):
-			global room
 			self.values = {"current_epoch": curr_epoch,
 				"total_epochs": JSON["iterations"],
 				"loss": logs.get('loss'),
@@ -93,35 +119,7 @@ def process_network(JSON, callback_sockets, callback_loaded):
 
 	return 'Test accuracy: ' + str(result[1]) + '\n'
 
-#TODO return sample image from dataset
-def sample_result(dataset, model, count):
-	# TODO select random element from test dataset
-	random_selection = random.randrange(dataset["x_test"].shape[0])
 
-	image_location = str(room) + "_" + str(count)
-
-	# TODO deal with different PNG_modes (function for each mode) (set in dataset)
-	if dataset["PNG_mode"] == "L":
-		png_l(np.copy(dataset["x_test"][random_selection]), dataset, "results/" + image_location)
-		data_uri = open("results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
-		img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
-	elif dataset["PNG_mode"] == "RGB":
-		png_rgb(np.copy(dataset["x_test"][random_selection]), dataset, "results/" + image_location)
-		data_uri = open("results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
-		img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
-	else:
-		#TODO: return empty image
-		return {}
-
-	# TODO: predict only one element
-	predictions = model.predict_classes(dataset["x_test"], batch_size=128, verbose=0)
-	predict = predictions.tolist()[random_selection]
-
-	return {
-		"expected": dataset["y_test"].tolist()[random_selection].index(1),
-		"predicted": predict,
-		"img_tag": img_tag,
-	}
 
 def png_l(arr, dataset, location):
 	#grayscale png image
