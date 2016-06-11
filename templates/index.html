@@ -20,9 +20,7 @@
 		});
 		var counter = 1;
 
-		//TODO link_layer function to add handlers to a layer element
 		function link_layer(layer) {
-			//TODO add onchange listener to selector
 			var selector = findClass(layer, "layer-type");
 			selector.addEventListener("change", function() {
 				var denseoptions = findClass(layer, "layer-dense-options");
@@ -31,7 +29,6 @@
 				denseoptions.style.display = 'none';
 				convoptions.style.display = 'none';
 				pooloptions.style.display = 'none';
-				//TODO unhide based on selector value
 				console.log(selector.value);
 				switch (selector.value) {
 					case "dense":
@@ -51,12 +48,100 @@
 
 		}
 
-		//TODO remake this function with new layer attributes
-		function addLayer(divName) {
-			var newdiv = document.createElement('div');
-			newdiv.innerHTML = "<label for=\"layer" + (counter + 1) + "\">Layer " + (counter + 1) + ":</label> <input type=\"text\" value=\"10\" class=\"form-control\" id=\"layer" + (counter + 1) + "\"><p>neurons</p>";
-			document.getElementById(divName).appendChild(newdiv);
-			counter++;
+		function addLayer() {
+			var layer = document.createElement("div");
+			document.getElementById("layers_contain").appendChild(layer);
+			layer.className = "well well-lg";
+			layer.id = "active";
+			//There's probably a better way to do this
+			$("#active").html(
+				'<div class="form-group layer">\
+			<div class="Row">\
+			  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
+			    <label for="layer">Layer</label>\
+			  </div>\
+			  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 alignright">\
+			    <div class="material-icons">add</div>\
+			    <div class="material-icons">clear</div>\
+			  </div>\
+			  <div class="form-group layer-types">\
+			    <label>Layer type:</label>\
+			    <select class="form-control layer-type">\
+			      <option value="dense">Dense</option>\
+			      <option value="conv2d">Convolutional 2D</option>\
+			      <option value="pool">Max Pooling</option>\
+			    </select>\
+			  </div>\
+			  <div class="layer-dense-options">\
+			    <label>Number of neurons:</label>\
+			    <input type="text" value="10" class="form-control dense-size">\
+			  </div>\
+			  <!-- hidden by default -->\
+			    <div class="layer-convolutional2d-options"  style="display: none;">\
+			    <div class="row">\
+			      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
+			        <label>Filter size:</label>\
+			        <div class="row">\
+			          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
+			            <div class="input-group">\
+			              <span class="input-group-addon" id="basic-addon1">X</span>\
+			              <input type="text" value="5" class="form-control filter-size-x">\
+			            </div>\
+			          </div>\
+			          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
+			            <div class="input-group">\
+			              <span class="input-group-addon" id="basic-addon1">Y</span>\
+			              <input type="text" value="5" class="form-control filter-size-y">\
+			            </div>\
+			          </div>\
+			        </div>\
+			      </div>\
+			      <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
+			        <label>Stride:</label>\
+			        <div class="row">\
+			          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
+			            <div class="input-group">\
+			              <span class="input-group-addon" id="basic-addon1">X</span>\
+			              <input type="text" value="1" class="form-control conv-stride-x">\
+			            </div>\
+			          </div>\
+			          <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">\
+			            <div class="input-group">\
+			              <span class="input-group-addon" id="basic-addon1">Y</span>\
+			              <input type="text" value="1" class="form-control conv-stride-y">\
+			            </div>\
+			          </div>\
+			        </div>\
+			      </div>\
+			    </div>\
+			    <br>\
+			    <label>Number of filters:</label>\
+			    <input type="text" value="10" class="form-control convolutional-size">\
+			  </div>\
+			  <!-- hidden by default -->\
+			  <div class="layer-maxpooling-options" style="display: none;">\
+			    <label>Stride:</label>\
+			    <div class="row">\
+			      <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">\
+			        <div class="input-group">\
+			          <span class="input-group-addon" id="basic-addon1">X</span>\
+			          <input type="text" value="1" class="form-control conv-stride-x">\
+			        </div>\
+			      </div>\
+			      <div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">\
+			        <div class="input-group">\
+			          <span class="input-group-addon" id="basic-addon1">Y</span>\
+			          <input type="text" value="1" class="form-control conv-stride-y">\
+			        </div>\
+			      </div>\
+			    </div>\
+			  </div>\
+			</div>\
+			</div>'
+			);
+
+			link_layer(layer);
+			console.log(layer);
 		}
 
 		function makeid() {
@@ -130,13 +215,9 @@
 		}
 	</script>
 	<style>
-		/* Remove the navbar's default margin-bottom and rounded borders */
-		/*.navbar {DOCUMENT_POSITION_PRECEDING(adjust as needed) */
-
 		.row.content {
 			height: 450px
 		}
-		/* Set gray background color and 100% height */
 
 		.sidenav {
 			padding-top: 20px;
@@ -162,10 +243,8 @@
 			color: white;
 			padding: 15px;
 			margin-top: -95px;
-			/* negative value of footer height */
 			height: 95px;
 		}
-		/* On small screens, set height to 'auto' for sidenav and grid */
 
 		@media screen and (max-width: 767px) {
 			.sidenav {
@@ -220,11 +299,7 @@
 		</div>
 		<div class="row">
 			<form role="form" method="post">
-				<div class="col-sm-6 text-left">
-					<!-- <div id="add_layer" class="form-group">
-						<input type="button" value="Add another layer" class="btn btn-default" onclick="addLayer('layer');">
-						</button>
-					</div> -->
+				<div id="layers_contain" class="col-sm-6 text-left">
 					<div class="well well-lg">
 						<div class="form-group layer">
 							<div class="Row">
@@ -243,8 +318,7 @@
 										<option value="pool">Max Pooling</option>
 									</select>
 								</div>
-								<div class="layer-dense-options" style="display: none;">
-									<!-- <div class="layer-dense-options"> -->
+								<div class="layer-dense-options">
 									<label>Number of neurons:</label>
 									<input type="text" value="10" class="form-control dense-size">
 								</div>
@@ -292,8 +366,7 @@
 									<input type="text" value="10" class="form-control convolutional-size">
 								</div>
 								<!-- hidden by default -->
-								<!-- <div class="layer-maxpooling-options" style="display: none;"> -->
-								<div class="layer-maxpooling-options">
+								<div class="layer-maxpooling-options" style="display: none;">
 									<label>Stride:</label>
 									<div class="row">
 										<div class="col-xs-6 col-sm-12 col-md-6 col-lg-6">
@@ -336,7 +409,6 @@
 					</div>
 				</div>
 				<div class="col-sm-12 text-center">
-					<!-- onclick="form_to_json()" -->
 					<button type="button" class="btn btn-success" onclick="form_to_json()">Run Network</button>
 				</div>
 			</form>
