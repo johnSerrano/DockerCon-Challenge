@@ -98,7 +98,7 @@ def create_model(JSON, callback_loaded, room):
         if i == 0:
             layers[layer["type"]](model, layer, dataset, None)
         else:
-            if JSON["layers"][i-1]["type"] in ["conv2d", "pool"]:
+            if JSON["layers"][i-1]["type"] in ["conv2d", "pool"] and layer["type"] not in ["conv2d", "pool"]:
                 model.add(Flatten())
             layers[layer["type"]](model, layer, dataset, JSON["layers"][i-1])
 
@@ -136,7 +136,12 @@ def add_layer_conv2d(model, layer, dataset, lastlayer):
         layer["stride-x"]),
         input_shape=dataset["input_shape"]))
         model.add(Activation("relu"))
-
+    else:
+        model.add(Convolution2D(layer["conv-size"],
+        layer["conv-y"],
+        layer["conv-x"],
+        subsample=(layer["stride-y"],layer["stride-x"])))
+        model.add(Activation("relu"))
 
 
 def get_dataset(JSON):
