@@ -43,6 +43,17 @@
 					$('#status').html("Loading...");
 				}
 			});
+			socket.on('error', function(err) {
+				console.error(err["error"]);
+				var warning = document.getElementById("error");
+				warning.className = "alert alert-danger";
+				warning.id = "active";
+				$('#active').html(err["error"]);
+				warning.id = "inactive";
+				$('#status').html("Error");
+				$('#network_details').html("error");
+				$('#sample_results').html("error");
+			})
 			socket.on('progress', function(msg) {
 				// $('#log').append('<p>Received: ' + msg.data + '</p>');
 				var finished_percentage = (parseInt(msg["current_epoch"]) / parseInt(msg["total_epochs"])) * 100
@@ -56,8 +67,6 @@
 				if ($('#status').html() == "Loading Network...") {
 					$('#status').html("Running Network...");
 				}
-
-				console.log(msg);
 
 				$('#sample_results').html("")
 				for (var i = 0; i < msg["predictions"].length; i++) {
@@ -207,6 +216,8 @@
 	<div class="container-fluid text-left main-body">
 		<br>
 		<div class="row">
+			<div id="error">
+			</div>
 			<div id="leftinfo_contain" class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
 				<div class="row">
 					<div class="col-xs-12 col-sm-6 com-md-6 col-lg-6">

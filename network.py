@@ -8,7 +8,7 @@ import numpy as np
 import png
 import random
 
-def process_network(JSON, callback_sockets, callback_loaded):
+def process_network(JSON, callbacks):
 
     #TODO check JSON for validity
     room = JSON["room"]
@@ -28,29 +28,33 @@ def process_network(JSON, callback_sockets, callback_loaded):
             for i in range(9):
                 d = sample_result(dataset, model, i, room)
                 self.values["predictions"].append(d)
-            callback_sockets(self.values, room)
-
+            callbacks["progress"](self.values, room)
+    try:
     #create model
-    model, dataset = create_model(JSON, callback_loaded, room)
-    cbk = Cbk()
-        # run callback with socket results
-    for i in range(JSON["iterations"] / dataset["epochs_until_report"]):
-        curr_epoch += 1
-        model.fit(dataset["x_train"],
-                  dataset["y_train"],
-                  validation_data=(dataset["x_test"], dataset["y_test"]),
-                  nb_epoch=dataset["epochs_until_report"],
-                  batch_size=dataset["batch_size"],
-                  verbose=0,
-                  callbacks=[cbk],
-                  shuffle=True)
-        result = model.evaluate(dataset["x_test"],
-                                dataset["y_test"],
-                                batch_size=dataset["batch_size"],
-                                verbose=0,
-                                sample_weight=None)
+        model, dataset = create_model(JSON, callbacks["loaded"], room)
+        cbk = Cbk()
+            # run callback with socket results
+        for i in range(JSON["iterations"] / dataset["epochs_until_report"]):
+            curr_epoch += 1
+            model.fit(dataset["x_train"],
+                      dataset["y_train"],
+                      validation_data=(dataset["x_test"], dataset["y_test"]),
+                      nb_epoch=dataset["epochs_until_report"],
+                      batch_size=dataset["batch_size"],
+                      verbose=0,
+                      callbacks=[cbk],
+                      shuffle=True)
+            result = model.evaluate(dataset["x_test"],
+                                    dataset["y_test"],
+                                    batch_size=dataset["batch_size"],
+                                    verbose=0,
+                                    sample_weight=None)
+    except Exception as e:
+        callbacks["error"]({"error": str(e)}, room)
+        return
+
     cbk.values["done"] = True
-    callback_sockets(cbk.values, room)
+    callback["progress"](cbk.values, room)
 
 
 def sample_result(dataset, model, count, room):

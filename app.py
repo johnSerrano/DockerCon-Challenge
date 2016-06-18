@@ -20,9 +20,14 @@ def index():
 @app.route('/runnetwork', methods=["POST"])
 def runnetwork():
 	content = request.get_json()
+	callbacks = {
+		"loaded": loaded_network_callback,
+		"progress": progress_socket_callback,
+		"error": error_callback,
+	}
 	if not content:
 		return "No JSON posted"
-	t = Thread(target=process_network, args=(content, progress_socket_callback, loaded_network_callback))
+	t = Thread(target=process_network, args=(content, callbacks))
 	t.start()
 	return "JSON posted successfully"
 	return process_network(content, progress_socket_callback)
@@ -40,6 +45,10 @@ def progress_socket_callback(progress, room):
 
 def loaded_network_callback(loaded, room):
 	socketio.emit('loaded', loaded, room=room)
+
+
+def error_callback(error, room):
+	socketio.emit('error', error, room=room)
 
 
 @socketio.on('join')
