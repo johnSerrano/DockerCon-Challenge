@@ -31,11 +31,34 @@
 				if ($('#status').html() == "Loading...") {
 					$('#status').html("Loading Network...");
 				}
+
+				var losses = {
+					"mean_absolute_error": "Mean Absolute Error",
+					"mean_squared_error": "Mean Squared Error",
+					"mean_absolute_percentage_error": "Mean Absolute Percentage Error",
+					"mean_squared_logarithmic_error": "Mean Squared Logarithmic Error",
+					"squared_hinge": "Squared Hinge",
+					"hinge": "Hinge",
+					"binary_crossentropy": "Binary Crossentropy (Logloss)",
+					"categorical_crossentropy": "Categorical Crossentropy",
+					"poisson": "Poisson",
+					"cosine_proximity": "Cosine Proximity",
+				}
+
 				$('#dataset').html("Dataset: " + msg['dataset']);
-				$('#network_details').html("");
+				$('#network_details').html("<h4>Configuration</h4>\
+																		<p>Loss function: " + losses[msg["loss"]] + "</p>\
+																		<h4>Layers</h4>\
+																		");
 				// for each (var layer in msg["layers"]) {
 				for (var i = 0; i < msg["layers"].length; i++) {
-					$('#network_details').append('<p>DENSE: '+ msg["layers"][i]["size"] +'<p>');
+					if (msg["layers"][i]["type"] == "dense") {
+						$('#network_details').append('<p>Dense: <br>Neurons: '+ msg["layers"][i]["dense-size"] +'<p>');
+					} else if (msg["layers"][i]["type"] == "pool") {
+						$('#network_details').append('<p>Max Pooling 2D:<br>x:'+ msg["layers"][i]["pool-x"] + ' y:'+ msg["layers"][i]["pool-y"] +'<p>');
+					} else if (msg["layers"][i]["type"] == "conv2d") {
+						$('#network_details').append('<p>Convolution 2D: <br>filter: x:'+ msg["layers"][i]["conv-x"] + ' y:'+ msg["layers"][i]["conv-y"] +'<br>stride: x:'+ msg["layers"][i]["stride-x"] + ' y:'+ msg["layers"][i]["stride-y"] +'<p>');
+					}
 				}
 			});
 			socket.on('join ack', function() {
@@ -43,7 +66,7 @@
 					$('#status').html("Loading...");
 				}
 			});
-			socket.on('error', function(err) {
+			socket.on('error msg', function(err) {
 				console.error(err["error"]);
 				var warning = document.getElementById("error");
 				warning.className = "alert alert-danger";
@@ -197,17 +220,13 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Logo</a>
+				<a class="navbar-brand" href="index.html">Neural Image Classification</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					<li><a href="index.html">Home</a></li>
-					<li class="active"><a href="#">Progress/Results</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="https://www.holbertonschool.com"><span class="#"></span> Holberton School</a></li>
-					<li><a href="https://www.docker.com"><span class="#"></span> Docker</a></li>
-					<li><a href="#"><span class="#"></span> Project on Github</a></li>
+					<li><a href="https://github.com/johnSerrano/Neural-GUI"><span class="#"></span> Project on Github</a></li>
 				</ul>
 			</div>
 		</div>
@@ -279,35 +298,6 @@
 			</div>
 		</div>
 	</div>
-
-	<footer class="footer">
-		<div class="container-fluid text-left">
-			<div class="row">
-				<div class="col-sm-3 pull-left">
-					<a class="btn btn-block btn-social btn-github" href="https://github.com/johnSerrano">
-						<span class="fa fa-github"></span>John Serrano
-					</a>
-				</div>
-				<div class="col-sm-3 pull-right">
-					<a class="btn btn-block btn-social btn-github" href="https://github.com/butcallmejo">
-						<span class="fa fa-github"></span>Josquin Gaillard
-					</a>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-sm-3 pull-left">
-					<a class="btn btn-block btn-social btn-twitter" href="https://twitter.com/johnSerrano2">
-						<span class="fa fa-twitter"></span>John Serrano
-					</a>
-				</div>
-				<div class="col-sm-3 pull-right">
-					<a class="btn btn-block btn-social btn-twitter" href="https://twitter.com/butcallmejo">
-						<span class="fa fa-twitter"></span>Josquin Gaillard
-					</a>
-				</div>
-			</div>
-		</div>
-	</footer>
 
 </body>
 

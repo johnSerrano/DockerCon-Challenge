@@ -29,10 +29,11 @@ def process_network(JSON, callbacks):
                 d = sample_result(dataset, model, i, room)
                 self.values["predictions"].append(d)
             callbacks["progress"](self.values, room)
+
+    cbk = Cbk()
     try:
     #create model
         model, dataset = create_model(JSON, callbacks["loaded"], room)
-        cbk = Cbk()
             # run callback with socket results
         for i in range(JSON["iterations"] / dataset["epochs_until_report"]):
             curr_epoch += 1
@@ -50,11 +51,11 @@ def process_network(JSON, callbacks):
                                     verbose=0,
                                     sample_weight=None)
     except Exception as e:
-        callbacks["error"]({"error": str(e)}, room)
+        callbacks["error"]({"error msg": str(e)}, room)
         return
 
     cbk.values["done"] = True
-    callback["progress"](cbk.values, room)
+    callbacks["progress"](cbk.values, room)
 
 
 def sample_result(dataset, model, count, room):
@@ -111,7 +112,7 @@ def create_model(JSON, callback_loaded, room):
     model.add(Dense(dataset["nb_classes"]))
     model.add(Activation("softmax"))
 
-    model.compile(loss='categorical_crossentropy',
+    model.compile(loss=JSON["loss"],
                   optimizer='adadelta',
                   metrics=['accuracy'])
 

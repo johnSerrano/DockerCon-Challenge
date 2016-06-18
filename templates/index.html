@@ -187,6 +187,7 @@
 
 			data["iterations"] = parseInt(document.getElementById("iters").value);
 			data["dataset"] = document.getElementById("dataset").value;
+			data["loss"] = document.getElementById("loss_function").value;
 
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", "/runnetwork", true);
@@ -230,6 +231,11 @@
 	<style>
 		.row.content {
 			height: 450px
+		}
+
+		.navbar {
+			margin-bottom: 0;
+			border-radius: 0;
 		}
 
 		.sidenav {
@@ -281,35 +287,20 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Logo</a>
+				<a class="navbar-brand" href="#">Neural Image Classification</a>
 			</div>
 			<div class="collapse navbar-collapse" id="myNavbar">
 				<ul class="nav navbar-nav">
-					<li class="active"><a href="#">Home</a></li>
-					<li><a href="results.html">Progress/Results</a></li>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-					<li><a href="https://www.holbertonschool.com"><span class="#"></span> Holberton School</a></li>
-					<li><a href="https://www.docker.com"><span class="#"></span> Docker</a></li>
-					<li><a href="https://github.com/butcallmeJo/DockerCon-Challenge"><span class="#"></span> Project on Github</a></li>
+					<li><a href="https://github.com/johnSerrano/Neural-GUI"><span class="#"></span> Project on Github</a></li>
 				</ul>
 			</div>
 		</div>
 	</nav>
 
 	<div class="container main-body">
-		<div class="row">
-			<div class="col-sm-12 text-left">
-				<h1>Deep Whaling</h1>
-				<h4>About:</h4>
-				<p><strong>Deep Whaling</strong> is an open source GUI to run <a href="http://keras.io/">Keras</a>, a highly modular neural networks library while running in a <a href="https://www.docker.com">Docker</a> container. This makes <strong>Deep Whaling</strong>					a very easy tool to learn about deep learning!</p>
-				<h4>How to use <strong>Deep Whaling</strong>:</h4>
-				<p>To run <strong>Deep Whaling</strong>, you just have to follow 4 easy steps:</p>
-				<ul>
-					<li>select the amount of layers you want.</li>
-					<li>Input how many neurons you want for each layer</li>
-			</div>
-		</div>
+		<h1>Create Network</h1>
 		<div class="row">
 			<form role="form" method="post">
 				<div id="layers_contain" class="col-sm-6 text-left">
@@ -407,14 +398,26 @@
 							<select class="form-control" id="dataset">
 								<option>mnist</option>
 								<option>cifar 10</option>
-								<option>-</option>
-								<option>-</option>
 							</select>
 						</div>
 						<div id="iterations" class="form-group">
 							<label for="iters">iterations:</label>
 							<input type="text" value="10" class="form-control" id="iters">
-							<p> iterations</p>
+						</div>
+						<div id="loss_functions" class="form-group">
+							<label for="loss_function">Loss Function:</label>
+							<select class="form-control" id="loss_function">
+								<option value="mean_absolute_error">Mean Absolute Error</option>
+								<option value="mean_squared_error">Mean Squared Error</option>
+								<option value="mean_absolute_percentage_error">Mean Absolute Percentage Error</option>
+								<option value="mean_squared_logarithmic_error">Mean Squared Logarithmic Error</option>
+								<option value="squared_hinge">Squared Hinge</option>
+								<option value="hinge">Hinge</option>
+								<option value="binary_crossentropy">Binary Crossentropy (Logloss)</option>
+								<option value="categorical_crossentropy">Categorical Crossentropy</option>
+								<option value="poisson">Poisson</option>
+								<option value="cosine_proximity">Cosine Proximity</option>
+							</select>
 						</div>
 					</div>
 				</div>
@@ -424,34 +427,6 @@
 			</form>
 		</div>
 	</div>
-	<footer class="footer">
-		<div class="container-fluid text-left">
-			<div class="row">
-				<div class="col-sm-3 pull-left">
-					<a class="btn btn-block btn-social btn-github" href="https://github.com/johnSerrano">
-						<span class="fa fa-github"></span>John Serrano
-					</a>
-				</div>
-				<div class="col-sm-3 pull-right">
-					<a class="btn btn-block btn-social btn-github" href="https://github.com/butcallmejo">
-						<span class="fa fa-github"></span>Josquin Gaillard
-					</a>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-sm-3 pull-left">
-					<a class="btn btn-block btn-social btn-twitter" href="https://twitter.com/johnSerrano2">
-						<span class="fa fa-twitter"></span>John Serrano
-					</a>
-				</div>
-				<div class="col-sm-3 pull-right">
-					<a class="btn btn-block btn-social btn-twitter" href="https://twitter.com/butcallmejo">
-						<span class="fa fa-twitter"></span>Josquin Gaillard
-					</a>
-				</div>
-			</div>
-		</div>
-	</footer>
 
 </body>
 
