@@ -1,6 +1,6 @@
 from keras.models import Sequential
 from keras.layers.core import Dense, Activation, Flatten
-from keras.layers.convolutional import Convolution2D
+from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.utils import np_utils
 from keras.optimizers import SGD
 from keras.callbacks import Callback
@@ -101,19 +101,29 @@ def create_model(JSON, callback_loaded, room):
             if JSON["layers"][i-1]["type"] in ["conv2d", "pool"] and layer["type"] not in ["conv2d", "pool"]:
                 model.add(Flatten())
             layers[layer["type"]](model, layer, dataset, JSON["layers"][i-1])
+    if JSON["layers"][-1]["type"] in ["conv2d", "pool"]:
+        model.add(Flatten())
 
     model.add(Dense(dataset["nb_classes"]))
     model.add(Activation("softmax"))
 
-    model.compile(loss='mean_absolute_error',
+    model.compile(loss='categorical_crossentropy',
                   optimizer='adadelta',
                   metrics=['accuracy'])
 
+    #redundant call after slow operation to increase chance of results page
+    #having loaded by now. better system necessary, perhaps send on room join
+    callback_loaded(JSON, room)
     return model, dataset
 
 
 def add_layer_pool(model, layer, dataset, lastlayer):
-    pass
+    if not lastlayer:
+        model.add(MaxPooling2D(
+        pool_size=(layer["pool-y"], layer["pool-x"]),
+        input_shape=dataset["input_shape"]))
+    else:
+        model.add(MaxPooling2D(pool_size=(layer["pool-y"], layer["pool-x"])))
 
 
 def add_layer_dense(model, layer, dataset, lastlayer):
