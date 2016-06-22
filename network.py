@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers.core import Dense, Activation, Flatten
+from keras.layers.core import Dense, Activation, Flatten, Dropout
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.utils import np_utils
 from keras.optimizers import SGD
@@ -96,9 +96,9 @@ def create_model(JSON, callback_loaded, room):
         "conv2d": add_layer_conv2d,
         "dense": add_layer_dense,
         "pool": add_layer_pool,
+        "drop": add_layer_drop,
     }
 
-    #TODO add layers
     for i, layer in enumerate(JSON["layers"]):
         if i == 0:
             layers[layer["type"]](model, layer, dataset, None)
@@ -129,6 +129,10 @@ def add_layer_pool(model, layer, dataset, lastlayer):
         input_shape=dataset["input_shape"]))
     else:
         model.add(MaxPooling2D(pool_size=(layer["pool-y"], layer["pool-x"])))
+
+
+def add_layer_drop(model, layer, dataset, lastlayer):
+    model.add(Dropout(layer["dropout-rate"]))
 
 
 def add_layer_dense(model, layer, dataset, lastlayer):

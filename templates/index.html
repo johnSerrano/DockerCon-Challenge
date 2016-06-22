@@ -25,9 +25,11 @@
 				var denseoptions = findClass(layer, "layer-dense-options");
 				var convoptions = findClass(layer, "layer-convolutional2d-options");
 				var pooloptions = findClass(layer, "layer-maxpooling-options");
+				var dropoptions = findClass(layer, "layer-dropout-options");
 				denseoptions.style.display = 'none';
 				convoptions.style.display = 'none';
 				pooloptions.style.display = 'none';
+				dropoptions.style.display = 'none';
 				switch (selector.value) {
 					case "dense":
 						denseoptions.style.display = 'block';
@@ -37,6 +39,9 @@
 						break;
 					case "pool":
 						pooloptions.style.display = 'block';
+						break;
+					case "drop":
+						dropoptions.style.display = 'block';
 						break;
 				}
 			});
@@ -77,6 +82,7 @@
 				      <option value="dense">Dense</option>\
 				      <option value="conv2d">Convolutional 2D</option>\
 				      <option value="pool">Max Pooling</option>\
+							<option value="drop">Dropout</option>\
 				    </select>\
 				  </div>\
 				  <div class="layer-dense-options">\
@@ -143,6 +149,10 @@
 				      </div>\
 				    </div>\
 				  </div>\
+					<div class="layer-dropout-options" style="display: none;">\
+						<label>Dropout rate:</label>\
+						<input type="text" value="0.3" class="form-control dropout-rate">\
+					</div>\
 				</div>\
 			</div>'
 			);
@@ -173,15 +183,16 @@
 			var layers = $(".layer");
 			for (var i=0 ; i<layers.length ; i++) {
 				data["layers"].push({
-					"type": findClass(layers[i], "layer-type").value,//TODO
-					"dense-size": parseInt(findClass(layers[i], "dense-size").value), //TODO
-					"conv-size": parseInt(findClass(layers[i], "convolutional-size").value), //TODO
-					"conv-x": parseInt(findClass(layers[i], "filter-size-x").value), //TODO
-					"conv-y": parseInt(findClass(layers[i], "filter-size-y").value), //TODO
-					"stride-x": parseInt(findClass(layers[i], "conv-stride-x").value), //TODO
-					"stride-y": parseInt(findClass(layers[i], "conv-stride-y").value), //TODO
-					"pool-x": parseInt(findClass(layers[i], "pool-stride-x").value), //TODO
-					"pool-y": parseInt(findClass(layers[i], "pool-stride-y").value), //TODO
+					"type": findClass(layers[i], "layer-type").value,
+					"dense-size": parseInt(findClass(layers[i], "dense-size").value),
+					"conv-size": parseInt(findClass(layers[i], "convolutional-size").value),
+					"conv-x": parseInt(findClass(layers[i], "filter-size-x").value),
+					"conv-y": parseInt(findClass(layers[i], "filter-size-y").value),
+					"stride-x": parseInt(findClass(layers[i], "conv-stride-x").value),
+					"stride-y": parseInt(findClass(layers[i], "conv-stride-y").value),
+					"pool-x": parseInt(findClass(layers[i], "pool-stride-x").value),
+					"pool-y": parseInt(findClass(layers[i], "pool-stride-y").value),
+					"dropout-rate": parseInt(findClass(layers[i], "dropout-rate").value),
 				})
 			}
 
@@ -320,15 +331,14 @@
 										<option value="dense">Dense</option>
 										<option value="conv2d">Convolutional 2D</option>
 										<option value="pool">Max Pooling</option>
+										<option value="drop">Dropout</option>
 									</select>
 								</div>
 								<div class="layer-dense-options">
 									<label>Number of neurons:</label>
 									<input type="text" value="10" class="form-control dense-size">
 								</div>
-								<!-- hidden by default -->
 								<div class="layer-convolutional2d-options" style="display: none;">
-									<!-- <div class="layer-convolutional2d-options" > -->
 									<div class="row">
 										<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 											<label>Filter size:</label>
@@ -386,6 +396,10 @@
 											</div>
 										</div>
 									</div>
+								</div>
+								<div class="layer-dropout-options" style="display: none;">
+									<label>Dropout rate:</label>
+									<input type="text" value="0.3" class="form-control dropout-rate">
 								</div>
 							</div>
 						</div>
