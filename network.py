@@ -16,7 +16,7 @@ from helpers.layer_helpers import (
     add_layer_pool
 )
 
-# Number of sample predictions display on the web gui
+# Number of sample predictions displayed on the web gui
 NUM_PREDICTIONS = 9
 
 def process_network(JSON, callbacks):
@@ -122,14 +122,19 @@ def sample_result(dataset, model, count, room):
     image_location = str(room) + "_" + str(count)
 
     #TODO: support alpha channel
-    #TODO: don't read from file. wtf is that about
     if dataset["PNG_mode"] == "L":
-        png_l(np.copy(dataset["x_test"][random_selection]), dataset, "results/" + image_location)
-        data_uri = open("results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
+        data_uri = png_l(
+            np.copy(dataset["x_test"][random_selection]),
+            dataset,
+            room
+        )
         img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
     elif dataset["PNG_mode"] == "RGB":
-        png_rgb(np.copy(dataset["x_test"][random_selection]), dataset, "results/" + image_location)
-        data_uri = open("results/" + image_location, 'rb').read().encode('base64').replace('\n', '')
+        data_uri = png_rgb(
+            np.copy(dataset["x_test"][random_selection]),
+            dataset,
+            room
+        )
         img_tag = '<img src="data:image/png;base64,{0}">'.format(data_uri)
     else:
         #TODO: return empty image
