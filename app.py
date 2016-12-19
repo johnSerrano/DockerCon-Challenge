@@ -30,7 +30,6 @@ def runnetwork():
 	t = Thread(target=process_network, args=(content, callbacks))
 	t.start()
 	return "JSON posted successfully"
-	return process_network(content, progress_socket_callback)
 
 
 @app.route('/results')

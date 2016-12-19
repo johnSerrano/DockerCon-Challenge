@@ -33,16 +33,16 @@
 				}
 
 				var losses = {
-					"mean_absolute_error": "Mean Absolute Error",
-					"mean_squared_error": "Mean Squared Error",
+					"mean_absolute_error":            "Mean Absolute Error",
+					"mean_squared_error":             "Mean Squared Error",
 					"mean_absolute_percentage_error": "Mean Absolute Percentage Error",
 					"mean_squared_logarithmic_error": "Mean Squared Logarithmic Error",
-					"squared_hinge": "Squared Hinge",
-					"hinge": "Hinge",
-					"binary_crossentropy": "Binary Crossentropy (Logloss)",
-					"categorical_crossentropy": "Categorical Crossentropy",
-					"poisson": "Poisson",
-					"cosine_proximity": "Cosine Proximity",
+					"squared_hinge":                  "Squared Hinge",
+					"hinge":                          "Hinge",
+					"binary_crossentropy":            "Binary Crossentropy (Logloss)",
+					"categorical_crossentropy":       "Categorical Crossentropy",
+					"poisson":                        "Poisson",
+					"cosine_proximity":               "Cosine Proximity",
 				}
 
 				$('#dataset').html("Dataset: " + msg['dataset']);
@@ -50,7 +50,7 @@
 																		<p>Loss function: " + losses[msg["loss"]] + "</p>\
 																		<h4>Layers</h4>\
 																		");
-				// for each (var layer in msg["layers"]) {
+
 				for (var i = 0; i < msg["layers"].length; i++) {
 					if (msg["layers"][i]["type"] == "dense") {
 						$('#network_details').append('<p>Dense: <br>Neurons: '+ msg["layers"][i]["dense-size"] +'<p>');
